@@ -57,9 +57,3 @@ export default function BusinessHub() {
     </section>
   );
 }
-        {activeTab === 'calendar' && <Calendar />}
-        {activeTab === 'progress' && <ProgressChecker />}
-      </div>
-    </section>
-  );
-}

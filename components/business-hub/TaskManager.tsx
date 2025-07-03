@@ -252,21 +252,4 @@ export default function TaskManager() {
     </div>
   );
 }
-                  cursor: 'pointer',
-                  padding: '0.5rem',
-                  borderRadius: '4px',
-                  fontSize: '0.9rem',
-                  transition: 'opacity 0.2s ease'
-                }}
-                onMouseEnter={(e) => e.target.style.opacity = '0.7'}
-                onMouseLeave={(e) => e.target.style.opacity = '1'}
-              >
-                Delete
-              </button>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
-}
+        
