@@ -7,6 +7,10 @@ import ProgressChecker from '@/components/business-hub/ProgressChecker';
 export default function BusinessHub() {
   const [activeTab, setActiveTab] = useState('tasks');
 
+  const handleTabHover = (tab: string, isHover: boolean) => {
+    // Handle hover state if needed
+  };
+
   return (
     <section className="container">
       <h1 style={{ color: 'var(--text-primary)', marginBottom: '2rem', textAlign: 'center' }}>
@@ -37,16 +41,6 @@ export default function BusinessHub() {
                 textTransform: 'capitalize',
                 transition: 'all 0.3s ease'
               }}
-              onMouseEnter={(e) => {
-                if (activeTab !== tab) {
-                  e.target.style.color = 'var(--text-primary)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (activeTab !== tab) {
-                  e.target.style.color = 'var(--text-secondary)';
-                }
-              }}
             >
               {tab === 'tasks' ? 'Task Manager' : tab === 'calendar' ? 'Calendar' : 'Progress Checker'}
             </button>
@@ -57,6 +51,12 @@ export default function BusinessHub() {
       {/* Tab Content */}
       <div>
         {activeTab === 'tasks' && <TaskManager />}
+        {activeTab === 'calendar' && <Calendar />}
+        {activeTab === 'progress' && <ProgressChecker />}
+      </div>
+    </section>
+  );
+}
         {activeTab === 'calendar' && <Calendar />}
         {activeTab === 'progress' && <ProgressChecker />}
       </div>

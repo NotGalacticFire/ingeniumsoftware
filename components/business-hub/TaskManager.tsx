@@ -1,8 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, query, where, onSnapshot, updateDoc, doc, deleteDoc } from 'firebase/firestore';
+import { useState } from 'react';
 
 interface Task {
   id: string;
@@ -15,7 +12,6 @@ interface Task {
 }
 
 export default function TaskManager() {
-  const { user } = useAuth();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState({
     title: '',
@@ -24,40 +20,28 @@ export default function TaskManager() {
     dueDate: ''
   });
 
-  useEffect(() => {
-    if (!user) return;
-
-    const q = query(collection(db, 'tasks'), where('userId', '==', user.uid));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const tasksData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Task[];
-      setTasks(tasksData);
-    });
-
-    return unsubscribe;
-  }, [user]);
-
   const addTask = async () => {
-    if (!user || !newTask.title) return;
+    if (!newTask.title) return;
 
-    await addDoc(collection(db, 'tasks'), {
+    const task: Task = {
+      id: Date.now().toString(),
       ...newTask,
-      userId: user.uid,
       completed: false,
       createdAt: new Date()
-    });
+    };
 
+    setTasks([...tasks, task]);
     setNewTask({ title: '', description: '', priority: 'medium', dueDate: '' });
   };
 
-  const toggleTask = async (taskId: string, completed: boolean) => {
-    await updateDoc(doc(db, 'tasks', taskId), { completed: !completed });
+  const toggleTask = async (taskId: string) => {
+    setTasks(tasks.map(task => 
+      task.id === taskId ? { ...task, completed: !task.completed } : task
+    ));
   };
 
   const deleteTask = async (taskId: string) => {
-    await deleteDoc(doc(db, 'tasks', taskId));
+    setTasks(tasks.filter(task => task.id !== taskId));
   };
 
   const getPriorityColor = (priority: string) => {
@@ -252,6 +236,22 @@ export default function TaskManager() {
                   background: 'none',
                   border: 'none',
                   color: '#ff3b30',
+                  cursor: 'pointer',
+                  padding: '0.5rem',
+                  borderRadius: '4px',
+                  fontSize: '0.9rem',
+                  transition: 'opacity 0.2s ease'
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
                   cursor: 'pointer',
                   padding: '0.5rem',
                   borderRadius: '4px',
